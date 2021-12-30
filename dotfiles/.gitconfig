@@ -1,7 +1,7 @@
 [user]
   name = subaru
   email = s@su8ru.dev
-  signingkey = 935585C85C793D28
+  signingkey = 61DBEE7D1756FCC8
 
 [core]
   autocrlf = input
