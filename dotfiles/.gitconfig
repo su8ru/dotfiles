@@ -1,0 +1,47 @@
+[user]
+  name = subaru
+  email = s@su8ru.dev
+  signingkey = 935585C85C793D28
+
+[core]
+  autocrlf = input
+  editor = 'vim'
+  quotepath = false
+
+[merge]
+  ff = false
+
+[push]
+  default = current
+
+[pull]
+  ff = only
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  program = gpg
+
+[credential]
+  helper = /mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe
+
+[init]
+  defaultBranch = main
+
+[alias]
+  # 2 chars
+  st = status
+  co = checkout
+  df = diff
+  cm = commit
+  pu = push
+  pl = pull
+  # utils
+  unstage = reset HEAD
+  current-branch-name = ! git branch | grep -e '^\\* ' | sed -e 's/^\\* //g'
+  force-pull = ! git fetch && git reset --hard origin/$(git current-branch-name)
+  # log
+  last = log -1 HEAD
+  l  = log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an%Creset%x09%s %C(red)%d%Creset\"
+  ll = !git --no-pager log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an%Creset%x09%s %C(red)%d%Creset\" -n 10
