@@ -6,6 +6,7 @@ export TZ='Asia/Tokyo'
 
 export EDITOR=vim
 export VISUAL=vim
+export GPG_TTY=$(tty)
 
 export IP=`hostname -I | cut -f1 -d' '`
 
