@@ -33,12 +33,6 @@ fi
 # phpbrew
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
-# GitHub CLI ================
-
-if hash gh 2>/dev/null; then
-  eval "$(gh completion -s zsh)"
-fi
-
 # color ================
 
 autoload -Uz colors
