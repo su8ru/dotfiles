@@ -12,6 +12,7 @@ find . -type f | cut -b 3- | xargs -I '{}' ln -snfv "/home/$USER/dotfiles/dotfil
 find . -type d | cut -b 3- | xargs -I '{}' chmod 755 "/home/$USER/{}"
 find . -type f | cut -b 3- | xargs -I '{}' chmod 755 "/home/$USER/{}"
 
+chmod 700 -R "/home/$USER/dotfiles"
 chmod 600 "/home/$USER/dotfiles/dotfiles/.ssh/authorized_keys"
 
 echo "Dotfiles install success"
