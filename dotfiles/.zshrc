@@ -285,7 +285,11 @@ function changetitle {
   fi
   # タイトル用に整形
   # title=[${USER}@${HOST%%.*}]${current_dir}
-  title=${current_dir}
+  local _host
+  if [ -n "$SSH_CONNECTION" ]; then
+    _host="$(hostname | cut -d "." -f 1):"
+  fi
+  title=${_host}${current_dir}
   case "${TERM}" in
     xterm*|kterm*|rxvt*)
       echo -ne "\033]0;${title}\007"
