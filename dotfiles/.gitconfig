@@ -3,6 +3,9 @@
   email = s@su8ru.dev
   signingkey = 61DBEE7D1756FCC8
 
+[url "git@github.com:"]
+  insteadOf = https://github.com
+
 [core]
   autocrlf = input
   editor = 'vim'
@@ -42,3 +45,4 @@
   last = log -1 HEAD
   l  = log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an%Creset%x09%s %C(red)%d%Creset\"
   ll = !git --no-pager log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an%Creset%x09%s %C(red)%d%Creset\" -n 10
+
