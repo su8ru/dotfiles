@@ -14,8 +14,9 @@ export DENO_INSTALL="/home/subaru/.deno"
 export BREW_INSTALL="/home/linuxbrew/.linuxbrew"
 export SCREENDIR=$HOME/.screen
 
+typeset -U path PATH
+
 export PATH="\
-$HOME/.anyenv/bin:\
 $HOME/.local/bin:\
 $HOME/.yarn/bin:\
 $HOME/.composer/vendor/bin:\
@@ -24,14 +25,12 @@ $DENO_INSTALL/bin:\
 $BREW_INSTALL/bin:\
 $PATH"
 
-# anyenv ================
+# asdf ================
 
-if hash anyenv 2>/dev/null; then
-  eval "$(anyenv init -)"
+if [ -e $HOME/.asdf ]; then
+  . $HOME/.asdf/asdf.sh
+  fpath=(${ASDF_DIR}/completions $fpath)
 fi
-
-# phpbrew
-[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 # color ================
 
