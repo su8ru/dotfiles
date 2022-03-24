@@ -66,6 +66,7 @@ alias gpp='g++-9 main.cpp -o ./a.out'
 alias py3='python3'
 alias :q
 alias grep='grep --color=auto'
+alias wslcd='(){cd `wslpath $1`}'
 
 function phpstorm() {
   SCRIPT='/mnt/c/Users/subaru/.bin/PhpStorm.cmd'
