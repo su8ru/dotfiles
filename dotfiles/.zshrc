@@ -25,6 +25,30 @@ $DENO_INSTALL/bin:\
 $BREW_INSTALL/bin:\
 $PATH"
 
+# Yubikey ================
+
+wsl2_ssh_pageant_bin="/home/subaru/.ssh/wsl2-ssh-pageant.exe"
+if test -x "$wsl2_ssh_pageant_bin"; then
+  export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+  if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
+    rm -f "$SSH_AUTH_SOCK"
+    (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
+  fi
+  export GPG_AGENT_SOCK="$HOME/.gnupg/S.gpg-agent"
+  if ! ss -a | grep -q "$GPG_AGENT_SOCK"; then
+    rm -rf "$GPG_AGENT_SOCK"
+    (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent" >/dev/null 2>&1 &)
+  fi
+  export GPG_AGENT_EXTRA_SOCK="$HOME/.gnupg/S.gpg-agent.extra"
+  if ! ss -a | grep -q "$GPG_AGENT_EXTRA_SOCK"; then
+    rm -rf "$GPG_AGENT_EXTRA_SOCK"
+    (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_EXTRA_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent.extra" >/dev/null 2>&1 &)
+  fi
+else
+  echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
+fi
+unset wsl2_ssh_pageant_bin
+
 # asdf ================
 
 if [ -e $HOME/.asdf ]; then
