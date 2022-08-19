@@ -1,10 +1,7 @@
 [user]
   name = subaru
-  email = s@su8ru.dev
-  signingkey = 61DBEE7D1756FCC8
-
-[url "git@github.com:"]
-  insteadOf = https://github.com
+  email = main@su8ru.dev
+  signingkey = 7573ED215A8DD685
 
 [core]
   autocrlf = input
