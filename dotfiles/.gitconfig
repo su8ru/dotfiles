@@ -7,6 +7,19 @@
   autocrlf = input
   editor = 'vim'
   quotepath = false
+  pager = delta
+
+[delta]
+  theme = Monokai Extended
+  line-numbers = true
+  minus-style = red bold ul
+  plus-style = green bold ul
+
+[interactive]
+  diffFilter = delta --color-only
+
+[add.interactive]
+  useBuiltin = false
 
 [merge]
   ff = false
