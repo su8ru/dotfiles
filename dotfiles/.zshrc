@@ -29,17 +29,17 @@ $PATH"
 
 wsl2_ssh_pageant_bin="/home/subaru/.ssh/wsl2-ssh-pageant.exe"
 if test -x "$wsl2_ssh_pageant_bin"; then
-  export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
   if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
     rm -f "$SSH_AUTH_SOCK"
     (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
   fi
-  export GPG_AGENT_SOCK="$HOME/.gnupg/S.gpg-agent"
+  export GPG_AGENT_SOCK="$(gpgconf --list-dirs agent-socket)"
   if ! ss -a | grep -q "$GPG_AGENT_SOCK"; then
     rm -rf "$GPG_AGENT_SOCK"
     (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent" >/dev/null 2>&1 &)
   fi
-  export GPG_AGENT_EXTRA_SOCK="$HOME/.gnupg/S.gpg-agent.extra"
+  export GPG_AGENT_EXTRA_SOCK="$(gpgconf --list-dirs agent-extra-socket)"
   if ! ss -a | grep -q "$GPG_AGENT_EXTRA_SOCK"; then
     rm -rf "$GPG_AGENT_EXTRA_SOCK"
     (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_EXTRA_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent.extra" >/dev/null 2>&1 &)
