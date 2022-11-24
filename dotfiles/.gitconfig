@@ -12,6 +12,7 @@
 [delta]
   theme = Monokai Extended
   line-numbers = true
+  side-by-side = true
   minus-style = red bold ul
   plus-style = green bold ul
 
@@ -47,6 +48,7 @@
   cm = commit
   pu = push
   pl = pull
+  sw = switch
   # utils
   unstage = reset HEAD
   current-branch-name = ! git branch | grep -e '^\\* ' | sed -e 's/^\\* //g'
