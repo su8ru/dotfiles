@@ -10,6 +10,7 @@ export GPG_TTY=$(tty)
 
 export IP=`hostname -I | cut -f1 -d' '`
 
+export RUSTC_WRAPPER=$(which sccache)
 export DENO_INSTALL="/home/subaru/.deno"
 export BREW_INSTALL="/home/linuxbrew/.linuxbrew"
 export SCREENDIR=$HOME/.screen
@@ -19,6 +20,7 @@ typeset -U path PATH
 export PATH="\
 $HOME/.local/bin:\
 $HOME/.yarn/bin:\
+$HOME/.cargo/bin:\
 $HOME/.composer/vendor/bin:\
 /usr/local/custom:\
 $DENO_INSTALL/bin:\
