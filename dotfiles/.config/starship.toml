@@ -13,8 +13,9 @@ style_user = 'tiara'
 show_always = true
 
 [hostname]
-format = '$ssh_symbol$hostname($style)'
+format = '$ssh_symbol[$hostname]($style)'
 ssh_symbol = '@'
+style = 'blue'
 
 [directory]
 format = ' [$path]($style)[$read_only]($read_only_style)'
