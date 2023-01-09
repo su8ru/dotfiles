@@ -183,122 +183,6 @@ zle -N down-line-or-beginning-search
 [[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
 [[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" down-line-or-beginning-search
 
-# prompt ================
-
-autoload -Uz add-zsh-hook
-autoload -Uz vcs_info
-setopt prompt_subst
-
-# 記号について
-#   - : WorkingTreeに変更がある場合(Indexにaddしていない変更がある場合)
-#   + : Indexに変更がある場合(commitしていない変更がIndexにある場合)
-#   ? : Untrackedなファイルがある場合
-#   * : remoteにpushしていない場合
-# https://yonchu.hatenablog.com/entry/20120506/1336335973
-
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
-zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
-zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
-zstyle ':vcs_info:*' actionformats '[%b|%a]'
-
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' formats '(%s)-[%b]'
-zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
-zstyle ':vcs_info:(svn|bzr):*' branchformat '%b:r%r'
-zstyle ':vcs_info:bzr:*' use-simple true
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' stagedstr "+"
-zstyle ':vcs_info:git:*' unstagedstr "-"
-zstyle ':vcs_info:git:*' formats '%s,%u%c,%b'
-zstyle ':vcs_info:git:*' actionformats '%s,%u%c,%b|%a'
-
-function _update_vcs_info_msg() {
-  psvar=()
-  LANG=en_US.UTF-8 vcs_info
-  local _vcs_name _status _branch_action _host
-  if [ -n "$vcs_info_msg_0_" ]; then
-    _vcs_name=$(echo "$vcs_info_msg_0_" | cut -d , -f 1)
-    _status=$(_git_untracked_or_not_pushed $(echo "$vcs_info_msg_0_" | cut -d , -f 2))
-    _branch_action=$(echo "$vcs_info_msg_0_" | cut -d , -f 3)
-    psvar[1]=" ${_branch_action}${_status}"
-  fi
-  if [ -n "$SSH_CONNECTION" ]; then
-    _host="@%F{blue}%m%F{white}"
-  fi
-  # 左側プロンプト
-  PROMPT="
-[%F{cyan}%n%F{white}$_host %F{yellow}%d%F{white}%1(v|%F{green}%1v|)%F{yellow}${VIRTUAL_ENV:+($(basename "$VIRTUAL_ENV"))}%F{white}]
-$ "
-}
-
-add-zsh-hook precmd _update_vcs_info_msg
-
-#
-# Untrackedなファイルが存在するか未PUSHなら記号を出力
-#   Untracked: ?
-#   未PUSH: *
-#
-function _git_untracked_or_not_pushed() {
-  local git_status head remotes stagedstr
-  local  staged_unstaged=$1 not_pushed="*" untracked="?"
-  # カレントがgitレポジトリ下かどうか判定
-  if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = "true" ]; then
-    # statusをシンプル表示で取得
-    git_status=$(git status -s 2> /dev/null)
-    # git status -s の先頭が??で始まる行がない場合、Untrackedなファイルは存在しない
-    if ! echo "$git_status" | grep "^??" > /dev/null 2>&1; then
-      untracked=""
-    fi
-
-    # stagedstrを取得
-    zstyle -s ":vcs_info:git:*" stagedstr stagedstr
-    # git status -s の先頭がAで始まる行があればstagedと判断
-    if [ -n "$stagedstr" ] && ! printf "$staged_unstaged" | grep "$stagedstr" > /dev/null 2>&1 \
-      && echo "$git_status" | grep "^A" > /dev/null 2>&1; then
-      staged_unstaged=${staged_unstaged}${stagedstr}
-    fi
-
-    # HEADのハッシュ値を取得
-    #  --verify 有効なオブジェクト名として使用できるかを検証
-    #  --quiet  --verifyと共に使用し、無効なオブジェクトが指定された場合でもエラーメッセージを出さない
-    #           そのかわり終了ステータスを0以外にする
-    head=$(git rev-parse --verify -q HEAD 2> /dev/null)
-    if [ $? -eq 0 ]; then
-      # HEADのハッシュ値取得に成功
-      # リモートのハッシュ値を配列で取得
-      remotes=($(git rev-parse --remotes 2> /dev/null))
-      if [ "$remotes[*]" ]; then
-        # リモートのハッシュ値取得に成功(リモートが存在する)
-        for x in ${remotes[@]}; do
-          # リモートとHEADのハッシュ値が一致するか判定
-          if [ "$head" = "$x" ]; then
-            # 一致した場合はPUSH済み
-            not_pushed=""
-            break
-          fi
-        done
-      else
-        # リモートが存在しない場合
-        not_pushed=""
-      fi
-    else
-      # HEADが存在しない場合(init直後など)
-      not_pushed=""
-    fi
-
-    # Untrackedなファイルが存在するか未PUSHなら記号を出力
-    if [ -n "$staged_unstaged" -o -n "$untracked" -o -n "$not_pushed" ]; then
-      printf "${staged_unstaged}${untracked}${not_pushed}"
-    fi
-  fi
-  return 0
-}
-
-precmd () {
-  vcs_info
-}
-
 # title ================
 
 # http://tekiomo.hatenablog.com/entry/20110518/1305730787
@@ -339,3 +223,7 @@ function chpwd() {
 preexec () {
   changetitle
 }
+
+# prompt ================
+
+eval "$(starship init zsh)"
