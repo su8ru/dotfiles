@@ -1,19 +1,19 @@
 # env ================
 
+## shell
+
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export TZ='Asia/Tokyo'
 
+## general
+
 export EDITOR=vim
 export VISUAL=vim
 export GPG_TTY=$(tty)
+export WIN_HOME="/mnt/c/Users/subaru"
 
-export IP=`hostname -I | cut -f1 -d' '`
-
-export RUSTC_WRAPPER=$(which sccache)
-export DENO_INSTALL="/home/subaru/.deno"
-export BREW_INSTALL="/home/linuxbrew/.linuxbrew"
-export SCREENDIR=$HOME/.screen
+## path
 
 typeset -U path PATH
 
@@ -27,10 +27,20 @@ $DENO_INSTALL/bin:\
 $BREW_INSTALL/bin:\
 $PATH"
 
+## runtime
+
+export DENO_INSTALL="$HOME/.deno"
+
+if type "sccache" > /dev/null 2>&1; then
+  export RUSTC_WRAPPER=$(which sccache)
+else
+  echo >&2 "[INOP] sccache"
+fi
+
 # Yubikey ================
 
-wsl2_ssh_pageant_bin="/home/subaru/.ssh/wsl2-ssh-pageant.exe"
-if test -x "$wsl2_ssh_pageant_bin"; then
+wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
+if [ -x "$wsl2_ssh_pageant_bin" ]; then
   export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
   if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
     rm -f "$SSH_AUTH_SOCK"
@@ -47,7 +57,7 @@ if test -x "$wsl2_ssh_pageant_bin"; then
     (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_EXTRA_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent.extra" >/dev/null 2>&1 &)
   fi
 else
-  echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
+  echo >&2 "[INOP] wsl2-ssh-pageant"
 fi
 unset wsl2_ssh_pageant_bin
 
@@ -56,6 +66,8 @@ unset wsl2_ssh_pageant_bin
 if [ -e $HOME/.asdf ]; then
   . $HOME/.asdf/asdf.sh
   fpath=(${ASDF_DIR}/completions $fpath)
+else
+  echo >&2 "[INOP] asdf"
 fi
 
 # color ================
@@ -188,13 +200,10 @@ zle -N down-line-or-beginning-search
 # http://tekiomo.hatenablog.com/entry/20110518/1305730787
 
 function changetitle {
-  # pwdを二回も実行しているのがなんかダサい...
   current_dir=`pwd | sed -e "s%\(/\([^.]\|\..\)\)[^/]*%\1%g"``pwd | sed -e "s%^.*/\([^.]\|\..\)\([^/]*\)$%\2%"`
   if [ $current_dir = "//" ]; then
     current_dir="/"
   fi
-  # タイトル用に整形
-  # title=[${USER}@${HOST%%.*}]${current_dir}
   local _host
   if [ -n "$SSH_CONNECTION" ]; then
     _host="$(hostname | cut -d "." -f 1):"
@@ -210,20 +219,13 @@ function changetitle {
   esac
 }
 
-# zsh起動時にとりあえず実行
 changetitle
 
-# cd実行後に変更
 function chpwd() {
-  changetitle
-}
-
-# Screenの場合、window切り替え時に前のwindowのタイトルがTerminal(＆タブ)のタイトルとして
-# 残ってしまうのでせめてcdコマンド以外のコマンドでも実行前にタイトルを変更
-preexec () {
   changetitle
 }
 
 # prompt ================
 
 eval "$(starship init zsh)"
+
