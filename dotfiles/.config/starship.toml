@@ -9,7 +9,7 @@ tiara = '#c3d4db'
 
 [username]
 format = '[$user]($style)'
-style_user = 'tiara'
+style_user = 'bright-cyan'
 show_always = true
 
 [hostname]

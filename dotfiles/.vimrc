@@ -29,6 +29,7 @@ set shiftwidth=2
 
 set ignorecase
 set smartcase
+
 set incsearch
 set wrapscan
 set hlsearch
@@ -36,3 +37,10 @@ set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 noremap! <C-?> <C-h>
+
+call plug#begin()
+Plug 'nordtheme/vim'
+call plug#end()
+
+colorscheme nord
+
