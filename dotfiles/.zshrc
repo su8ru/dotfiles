@@ -47,7 +47,7 @@ if [ -x "$wsl2_ssh_pageant_bin" ]; then
     (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
   fi
   export GPG_AGENT_SOCK="$(gpgconf --list-dirs agent-socket)"
-  if ! ss -a | grep -q "$GPG_AGENT_SOCK"; then
+  if ! ss -a | grep -q "$GPG_AGENT_SOCK "; then
     rm -rf "$GPG_AGENT_SOCK"
     (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent" >/dev/null 2>&1 &)
   fi
@@ -229,3 +229,5 @@ function chpwd() {
 
 eval "$(starship init zsh)"
 
+
+export PATH=$HOME/.progate/bin:$PATH
