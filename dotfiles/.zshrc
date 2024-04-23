@@ -33,8 +33,11 @@ export DENO_INSTALL="$HOME/.deno"
 
 if type "sccache" > /dev/null 2>&1; then
   export RUSTC_WRAPPER=$(which sccache)
-else
-  echo >&2 "[INOP] sccache"
+fi
+
+if type "ghr" > /dev/null 2>&1; then
+  source <(ghr shell bash)
+  source <(ghr shell bash --completion)
 fi
 
 # Yubikey ================
