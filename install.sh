@@ -2,17 +2,15 @@
 
 set -eu
 
-USER="subaru"
+cd "$HOME/dotfiles/dotfiles"
 
-cd "/home/$USER/dotfiles/dotfiles"
+find . -type d | cut -b 3- | xargs -I '{}' mkdir -p "$HOME/{}"
+find . -type f | cut -b 3- | xargs -I '{}' ln -snfv "$HOME/dotfiles/dotfiles/{}" "/home/$HOME/{}"
 
-find . -type d | cut -b 3- | xargs -I '{}' mkdir -p "/home/$USER/{}"
-find . -type f | cut -b 3- | xargs -I '{}' ln -snfv "/home/$USER/dotfiles/dotfiles/{}" "/home/$USER/{}"
+find . -type d | cut -b 3- | xargs -I '{}' chmod 755 "$HOME/{}"
+find . -type f | cut -b 3- | xargs -I '{}' chmod 755 "$HOME/{}"
 
-find . -type d | cut -b 3- | xargs -I '{}' chmod 755 "/home/$USER/{}"
-find . -type f | cut -b 3- | xargs -I '{}' chmod 755 "/home/$USER/{}"
-
-chmod 700 -R "/home/$USER/dotfiles"
-chmod 600 "/home/$USER/dotfiles/dotfiles/.ssh/authorized_keys"
+chmod 700 -R "$HOME/dotfiles"
+chmod 600 "$HOME/dotfiles/dotfiles/.ssh/authorized_keys"
 
 echo "Dotfiles install success"
