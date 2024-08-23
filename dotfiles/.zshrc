@@ -40,6 +40,11 @@ if type "ghr" > /dev/null 2>&1; then
   source <(ghr shell bash --completion)
 fi
 
+if docker compose &> /dev/null 2>&1; then
+  source <(docker completion zsh)
+fi
+
+
 # Yubikey ================
 
 wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
