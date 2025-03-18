@@ -134,6 +134,7 @@
       # shell
       starship
       delta
+      gh
 
       # apps
       _1password-gui
