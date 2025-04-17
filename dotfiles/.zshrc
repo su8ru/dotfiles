@@ -18,6 +18,7 @@ export WIN_HOME="/mnt/c/Users/subaru"
 typeset -U path PATH
 
 export PATH="\
+/opt/homebrew/bin:\
 $HOME/.local/bin:\
 $HOME/.yarn/bin:\
 $HOME/.cargo/bin:\
@@ -25,6 +26,7 @@ $HOME/.composer/vendor/bin:\
 /usr/local/custom:\
 $DENO_INSTALL/bin:\
 $BREW_INSTALL/bin:\
+${ASDF_DATA_DIR:-$HOME/.asdf}/shims:\
 $PATH"
 
 ## runtime
@@ -72,8 +74,7 @@ unset wsl2_ssh_pageant_bin
 # asdf ================
 
 if [ -e $HOME/.asdf ]; then
-  . $HOME/.asdf/asdf.sh
-  fpath=(${ASDF_DIR}/completions $fpath)
+  fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
 else
   echo >&2 "[INOP] asdf"
 fi
@@ -237,5 +238,3 @@ function chpwd() {
 
 eval "$(starship init zsh)"
 
-
-export PATH=$HOME/.progate/bin:$PATH
