@@ -1,0 +1,45 @@
+# $all is shorthand for $username$hostname$localip$shlvl$singularity$kubernetes$directory$vcsh$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$docker_context$package$cmake$cobol$dart$deno$dotnet$elixir$elm$erlang$golang$helm$java$julia$kotlin$lua$nim$nodejs$ocaml$perl$php$pulumi$purescript$python$rlang$red$ruby$rust$scala$swift$terraform$vlang$vagrant$zig$nix_shell$conda$memory_usage$aws$gcloud$openstack$azure$env_var$crystal$custom$sudo$cmd_duration$line_break$jobs$battery$time$status$container$shell$character
+format = '''\[$username$hostname$directory$git_branch$git_commit$git_state$git_status\]
+$character'''
+
+palette = 'main'
+
+[palettes.main]
+tiara = '#c3d4db'
+
+[username]
+format = '[$user]($style)'
+style_user = 'bright-cyan'
+show_always = true
+
+[hostname]
+format = '$ssh_symbol[$hostname]($style)'
+ssh_symbol = '@'
+style = 'blue'
+
+[directory]
+format = ' [$path]($style)[$read_only]($read_only_style)'
+style = 'yellow'
+truncation_length = 8
+truncation_symbol = '…/'
+truncate_to_repo = false
+
+[character]
+success_symbol = '[>](green)'
+error_symbol = '[>](red)'
+
+[git_branch]
+format = ' [$branch(:$remote_branch)]($style)'
+style = 'green'
+
+[git_commit]
+format = ' \([$hash$tag]($style)\)'
+tag_disabled = false
+tag_symbol = '/'
+tag_max_candidates = 1
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\)'
+
+[git_status]
+format = '( [\($all_status$ahead_behind\)]($style))'
