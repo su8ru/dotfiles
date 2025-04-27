@@ -1,0 +1,241 @@
+# env ================
+
+## shell
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export TZ='Asia/Tokyo'
+
+## general
+
+export EDITOR=vim
+export VISUAL=vim
+export GPG_TTY=$(tty)
+export WIN_HOME="/mnt/c/Users/subaru"
+
+## path
+
+typeset -U path PATH
+
+export PATH="\
+/opt/homebrew/bin:\
+$HOME/.local/bin:\
+$HOME/.yarn/bin:\
+$HOME/.cargo/bin:\
+$HOME/.composer/vendor/bin:\
+/usr/local/custom:\
+/usr/local/go/bin:\
+$HOME/go/bin:\
+$DENO_INSTALL/bin:\
+$BREW_INSTALL/bin:\
+${ASDF_DATA_DIR:-$HOME/.asdf}/shims:\
+$PATH"
+
+## runtime
+
+export DENO_INSTALL="$HOME/.deno"
+
+if type "sccache" > /dev/null 2>&1; then
+  export RUSTC_WRAPPER=$(which sccache)
+fi
+
+if type "ghr" > /dev/null 2>&1; then
+  source <(ghr shell bash)
+  source <(ghr shell bash --completion)
+fi
+
+if docker compose &> /dev/null 2>&1; then
+  source <(docker completion zsh)
+fi
+
+
+# Yubikey ================
+
+wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
+if [ -x "$wsl2_ssh_pageant_bin" ]; then
+  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+  if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
+    rm -f "$SSH_AUTH_SOCK"
+    (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
+  fi
+  export GPG_AGENT_SOCK="$(gpgconf --list-dirs agent-socket)"
+  if ! ss -a | grep -q "$GPG_AGENT_SOCK "; then
+    rm -rf "$GPG_AGENT_SOCK"
+    (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent" >/dev/null 2>&1 &)
+  fi
+  export GPG_AGENT_EXTRA_SOCK="$(gpgconf --list-dirs agent-extra-socket)"
+  if ! ss -a | grep -q "$GPG_AGENT_EXTRA_SOCK"; then
+    rm -rf "$GPG_AGENT_EXTRA_SOCK"
+    (setsid nohup socat UNIX-LISTEN:"$GPG_AGENT_EXTRA_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin --gpg S.gpg-agent.extra" >/dev/null 2>&1 &)
+  fi
+else
+  echo >&2 "[INOP] wsl2-ssh-pageant"
+fi
+
+# asdf ================
+
+if [ -e $HOME/.asdf ]; then
+  fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+else
+  echo >&2 "[INOP] asdf"
+fi
+
+# color ================
+
+autoload -Uz colors
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+colors
+
+# comp ================
+
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' ignore-parents parent pwd ..
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
+                              /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
+
+# history ================
+
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+# alias ================
+
+alias nyarn='yarn'
+alias explorer='explorer.exe'
+alias clip='clip.exe'
+alias pwsh='pwsh.exe'
+alias gpp='g++-9 main.cpp -o ./a.out'
+alias py3='python3'
+alias :q
+alias grep='grep --color=auto'
+alias wslcd='(){cd `wslpath $1`}'
+
+function phpstorm() {
+  SCRIPT='/mnt/c/Users/subaru/.bin/PhpStorm.cmd'
+  LOCATION="$(wslpath -w $1)"
+  pushd "$(dirname "$SCRIPT")" >> /dev/null
+  cmd.exe "$SCRIPT" "$LOCATION"
+  popd >> /dev/null
+}
+
+# setopt ================
+
+setopt print_eight_bit
+setopt no_beep
+setopt no_flow_control
+setopt ignore_eof
+setopt interactive_comments
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt extended_glob
+setopt correct
+setopt appendhistory
+setopt incappendhistory
+setopt +o nomatch
+setopt nonomatch
+
+# 単語の区切り文字を指定する
+autoload -Uz select-word-style
+select-word-style default
+# ここで指定した文字は単語区切りとみなされる
+# / も区切りと扱うので、^W でディレクトリ１つ分を削除できる
+zstyle ':zle:*' word-chars " /=;@:{},|"
+zstyle ':zle:*' word-style unspecified
+
+# key ================
+
+# https://wiki.archlinux.org/index.php/Zsh#Key_bindings
+
+# create a zkbd compatible hash;
+# to add other keys to this hash, see: man 5 terminfo
+typeset -g -A key
+
+key[Home]="${terminfo[khome]}"
+key[End]="${terminfo[kend]}"
+key[Insert]="${terminfo[kich1]}"
+key[Backspace]="${terminfo[kbs]}"
+key[Delete]="${terminfo[kdch1]}"
+key[Up]="${terminfo[kcuu1]}"
+key[Down]="${terminfo[kcud1]}"
+key[Left]="${terminfo[kcub1]}"
+key[Right]="${terminfo[kcuf1]}"
+key[PageUp]="${terminfo[kpp]}"
+key[PageDown]="${terminfo[knp]}"
+key[Shift-Tab]="${terminfo[kcbt]}"
+
+# setup key accordingly
+[[ -n "${key[Home]}"      ]] && bindkey -- "${key[Home]}"       beginning-of-line
+[[ -n "${key[End]}"       ]] && bindkey -- "${key[End]}"        end-of-line
+[[ -n "${key[Insert]}"    ]] && bindkey -- "${key[Insert]}"     overwrite-mode
+[[ -n "${key[Backspace]}" ]] && bindkey -- "${key[Backspace]}"  backward-delete-char
+[[ -n "${key[Delete]}"    ]] && bindkey -- "${key[Delete]}"     delete-char
+[[ -n "${key[Up]}"        ]] && bindkey -- "${key[Up]}"         up-line-or-history
+[[ -n "${key[Down]}"      ]] && bindkey -- "${key[Down]}"       down-line-or-history
+[[ -n "${key[Left]}"      ]] && bindkey -- "${key[Left]}"       backward-char
+[[ -n "${key[Right]}"     ]] && bindkey -- "${key[Right]}"      forward-char
+[[ -n "${key[PageUp]}"    ]] && bindkey -- "${key[PageUp]}"     beginning-of-buffer-or-history
+[[ -n "${key[PageDown]}"  ]] && bindkey -- "${key[PageDown]}"   end-of-buffer-or-history
+[[ -n "${key[Shift-Tab]}" ]] && bindkey -- "${key[Shift-Tab]}"  reverse-menu-complete
+
+# Finally, make sure the terminal is in application mode, when zle is
+# active. Only then are the values from $terminfo valid.
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+	autoload -Uz add-zle-hook-widget
+	function zle_application_mode_start { echoti smkx }
+	function zle_application_mode_stop { echoti rmkx }
+	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
+	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+fi
+
+# History search
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+[[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
+[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" down-line-or-beginning-search
+
+# title ================
+
+# http://tekiomo.hatenablog.com/entry/20110518/1305730787
+
+function changetitle {
+  current_dir=`pwd | sed -e "s%\(/\([^.]\|\..\)\)[^/]*%\1%g"``pwd | sed -e "s%^.*/\([^.]\|\..\)\([^/]*\)$%\2%"`
+  if [ $current_dir = "//" ]; then
+    current_dir="/"
+  fi
+  local _host
+  if [ -n "$SSH_CONNECTION" ]; then
+    _host="$(hostname | cut -d "." -f 1):"
+  fi
+  title=${_host}${current_dir}
+  case "${TERM}" in
+    xterm*|kterm*|rxvt*)
+      echo -ne "\033]0;${title}\007"
+    ;;  
+    screen*)
+      echo -ne "\033P\033]0;${title}\007\033\\"
+    ;;  
+  esac
+}
+
+changetitle
+
+function chpwd() {
+  changetitle
+}
+
+# prompt ================
+
+eval "$(starship init zsh)"
+
