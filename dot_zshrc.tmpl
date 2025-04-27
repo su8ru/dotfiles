@@ -1,3 +1,8 @@
+# ================
+# su8ru's .zshrc
+# This file is managed by chezmoi. Do not edit this directly.
+# ================
+
 # env ================
 
 ## shell
@@ -11,7 +16,9 @@ export TZ='Asia/Tokyo'
 export EDITOR=vim
 export VISUAL=vim
 export GPG_TTY=$(tty)
+{{ if hasSuffix "WSL2" .chezmoi.kernel.osrelease }}
 export WIN_HOME="/mnt/c/Users/subaru"
+{{ end }}
 
 ## path
 
@@ -35,8 +42,8 @@ $PATH"
 
 export DENO_INSTALL="$HOME/.deno"
 
-if type "sccache" > /dev/null 2>&1; then
-  export RUSTC_WRAPPER=$(which sccache)
+if type "asdf" > /dev/null 2>&1; then
+  fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
 fi
 
 if type "ghr" > /dev/null 2>&1; then
@@ -44,11 +51,15 @@ if type "ghr" > /dev/null 2>&1; then
   source <(ghr shell bash --completion)
 fi
 
+if type "sccache" > /dev/null 2>&1; then
+  export RUSTC_WRAPPER=$(which sccache)
+fi
+
 if docker compose &> /dev/null 2>&1; then
   source <(docker completion zsh)
 fi
 
-
+{{ if hasSuffix "WSL2" .chezmoi.kernel.osrelease }}
 # Yubikey ================
 
 wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
@@ -71,14 +82,7 @@ if [ -x "$wsl2_ssh_pageant_bin" ]; then
 else
   echo >&2 "[INOP] wsl2-ssh-pageant"
 fi
-
-# asdf ================
-
-if [ -e $HOME/.asdf ]; then
-  fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
-else
-  echo >&2 "[INOP] asdf"
-fi
+{{ end }}
 
 # color ================
 
@@ -107,22 +111,17 @@ SAVEHIST=1000000
 # alias ================
 
 alias nyarn='yarn'
-alias explorer='explorer.exe'
-alias clip='clip.exe'
-alias pwsh='pwsh.exe'
 alias gpp='g++-9 main.cpp -o ./a.out'
 alias py3='python3'
 alias :q
 alias grep='grep --color=auto'
-alias wslcd='(){cd `wslpath $1`}'
 
-function phpstorm() {
-  SCRIPT='/mnt/c/Users/subaru/.bin/PhpStorm.cmd'
-  LOCATION="$(wslpath -w $1)"
-  pushd "$(dirname "$SCRIPT")" >> /dev/null
-  cmd.exe "$SCRIPT" "$LOCATION"
-  popd >> /dev/null
-}
+{{ if hasSuffix "WSL2" .chezmoi.kernel.osrelease }}
+alias explorer='explorer.exe'
+alias clip='clip.exe'
+alias pwsh='pwsh.exe'
+alias wslcd='(){cd `wslpath $1`}'
+{{end}}
 
 # setopt ================
 
@@ -238,4 +237,3 @@ function chpwd() {
 # prompt ================
 
 eval "$(starship init zsh)"
-
