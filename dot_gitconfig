@@ -1,0 +1,67 @@
+[user]
+  name = subaru
+  email = main@su8ru.dev
+  signingkey = 7573ED215A8DD685
+
+[core]
+  autocrlf = input
+  editor = 'vim'
+  quotepath = false
+  pager = delta
+
+[delta]
+  theme = Monokai Extended
+  line-numbers = true
+  side-by-side = true
+  minus-style = red bold ul
+  plus-style = green bold ul
+
+[interactive]
+  diffFilter = delta --color-only
+
+[add.interactive]
+  useBuiltin = false
+
+[merge]
+  ff = false
+
+[push]
+  default = current
+	autoSetupRemote = true
+
+[pull]
+  ff = only
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  program = gpg
+
+[init]
+  defaultBranch = main
+
+[alias]
+  # 2 chars
+  st = status
+  co = checkout
+  df = diff
+  cm = commit
+  pu = push
+  pl = pull
+  sw = switch
+  # utils
+  unstage = reset HEAD
+  current-branch-name = ! git branch | grep -e '^\\* ' | sed -e 's/^\\* //g'
+  force-pull = ! git fetch && git reset --hard origin/$(git current-branch-name)
+  # log
+  last = log -1 HEAD
+  l  = log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an (%G?)%Creset%x09%s %C(red)%d%Creset\"
+  ll = !git --no-pager log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an (%G?)%Creset%x09%s %C(red)%d%Creset\" -n 10
+
+[credential "https://github.com"]
+  helper = 
+  helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+  helper = 
+  helper = !gh auth git-credential
