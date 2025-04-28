@@ -42,7 +42,10 @@ $PATH"
 
 export DENO_INSTALL="$HOME/.deno"
 
-if type "asdf" > /dev/null 2>&1; then
+if type "mise" > /dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+  eval "$(mise activate --shims)"
+elif type "asdf" > /dev/null 2>&1; then
   fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
 fi
 

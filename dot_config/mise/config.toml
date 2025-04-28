@@ -1,0 +1,5 @@
+[tools]
+chezmoi = "latest"
+delta = "latest"
+gh = "latest"
+node = "22"
