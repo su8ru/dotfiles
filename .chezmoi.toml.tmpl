@@ -1,0 +1,7 @@
+{{- $isLinux := eq .chezmoi.os "linux" -}}
+
+{{- $osrelease := index .chezmoi.kernel "osrelease" | default "" -}}
+{{- $hasWSLString := hasSuffix "WSL2" $osrelease -}}
+
+[data]
+  isWSL2 = {{- and $isLinux $hasWSLString -}}

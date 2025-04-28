@@ -16,7 +16,7 @@ export TZ='Asia/Tokyo'
 export EDITOR=vim
 export VISUAL=vim
 export GPG_TTY=$(tty)
-{{ if hasSuffix "WSL2" .chezmoi.kernel.osrelease }}
+{{ if .isWSL2 }}
 export WIN_HOME="/mnt/c/Users/subaru"
 {{ end }}
 
@@ -59,7 +59,7 @@ if docker compose &> /dev/null 2>&1; then
   source <(docker completion zsh)
 fi
 
-{{ if hasSuffix "WSL2" .chezmoi.kernel.osrelease }}
+{{ if .isWSL2 }}
 # Yubikey ================
 
 wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
@@ -116,7 +116,7 @@ alias py3='python3'
 alias :q
 alias grep='grep --color=auto'
 
-{{ if hasSuffix "WSL2" .chezmoi.kernel.osrelease }}
+{{ if .isWSL2 }}
 alias explorer='explorer.exe'
 alias clip='clip.exe'
 alias pwsh='pwsh.exe'
