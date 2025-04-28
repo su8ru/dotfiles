@@ -41,4 +41,5 @@ systemctl --user mask gpg-agent.service
 ```sh
 mise upgrade
 chezmoi update -v
+mise install
 ```
