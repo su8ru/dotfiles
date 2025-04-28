@@ -1,0 +1,27 @@
+shell-integration = zsh
+
+clipboard-read = allow
+clipboard-write = allow
+
+window-padding-x = 8
+window-padding-y = 8
+
+theme = nord
+background = #2e3440
+background-opacity = 0.8
+background-blur = 20
+
+resize-overlay = never
+
+cursor-style = bar
+cursor-style-blink = false
+
+font-size = 15
+font-feature = -dlig
+font-family = "UDEV Gothic NF"
+
+gtk-wide-tabs = false
+gtk-titlebar = false
+
+macos-option-as-alt = true
+
