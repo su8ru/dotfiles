@@ -39,15 +39,19 @@ $BREW_INSTALL/bin:\
 ${ASDF_DATA_DIR:-$HOME/.asdf}/shims:\
 $PATH"
 
+## runtime
+
+autoload -Uz bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
+
 if type "brew" &> /dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
   source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-  autoload -Uz compinit && compinit
 fi
 
-## runtime
-
-export DENO_INSTALL="$HOME/.deno"
+if type "deno" > /dev/null 2>&1; then
+  export DENO_INSTALL="$HOME/.deno"
+fi
 
 if type "mise" > /dev/null 2>&1; then
   eval "$(mise activate zsh)"
@@ -102,9 +106,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 colors
 
 # comp ================
-
-autoload -Uz compinit
-compinit
 
 zstyle ':completion:*' menu select=1
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
