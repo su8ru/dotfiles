@@ -39,6 +39,12 @@ $BREW_INSTALL/bin:\
 ${ASDF_DATA_DIR:-$HOME/.asdf}/shims:\
 $PATH"
 
+if type "brew" &> /dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  autoload -Uz compinit && compinit
+fi
+
 ## runtime
 
 export DENO_INSTALL="$HOME/.deno"
