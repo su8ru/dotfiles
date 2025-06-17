@@ -73,9 +73,9 @@ if docker compose &> /dev/null 2>&1; then
   source <(docker completion zsh)
 fi
 
-{{ if .isWSL2 }}
 # Yubikey ================
 
+{{ if .isWSL2 }}
 wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
 if [ -x "$wsl2_ssh_pageant_bin" ]; then
   export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
@@ -96,6 +96,8 @@ if [ -x "$wsl2_ssh_pageant_bin" ]; then
 else
   echo >&2 "[INOP] wsl2-ssh-pageant"
 fi
+{{ else }}
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 {{ end }}
 
 # color ================
