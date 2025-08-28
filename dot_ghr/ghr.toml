@@ -3,9 +3,15 @@ owner = "su8ru"
 
 [profiles.default]
 user.name = "su8ru"
-user.email = "me@su8ru.dev"
+user.email = "main@su8ru.dev"
 user.signingkey = "7573ED215A8DD685"
 commit.gpgsign = true
 
+[profiles.pixiv]
+user.name = "su8ru"
+user.email = "su8ru@pixiv.co.jp"
+commit.gpgsign = false
+
 [[rules]]
 profile.name = "default"
+
