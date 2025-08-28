@@ -24,4 +24,3 @@ gtk-wide-tabs = false
 gtk-titlebar = false
 
 macos-option-as-alt = true
-

@@ -1,2 +1,11 @@
 [defaults]
 owner = "su8ru"
+
+[profiles.default]
+user.name = "su8ru"
+user.email = "me@su8ru.dev"
+user.signingkey = "7573ED215A8DD685"
+commit.gpgsign = true
+
+[[rules]]
+profile.name = "default"
