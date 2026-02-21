@@ -3,9 +3,11 @@ chezmoi = "latest"
 delta = "latest"
 gh = "latest"
 go = "latest"
-node = "22"
-python = "3.13"
+node = "lts"
+"npm:@github/copilot" = "latest"
+"npm:@openai/codex" = "latest"
+"npm:pnpm" = "latest"
+pnpm = "latest"
 starship = "latest"
+uv = "latest"
 
-[settings]
-idiomatic_version_file_enable_tools = ["python"]
