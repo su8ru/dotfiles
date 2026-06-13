@@ -1,0 +1,16 @@
+# env ================
+
+## shell
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export TZ='Asia/Tokyo'
+
+## general
+
+export EDITOR=vim
+export VISUAL=vim
+export GPG_TTY=$(tty)
+{{ if .isWSL2 -}}
+export WIN_HOME="/mnt/c/Users/subaru"
+{{ end -}}

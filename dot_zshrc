@@ -1,0 +1,20 @@
+# ================
+# su8ru's .zshrc
+# This file is managed by chezmoi. Do not edit this directly.
+# ================
+
+for config_file in \
+  "$HOME/.zsh.d/00-env.zsh" \
+  "$HOME/.zsh.d/10-path.zsh" \
+  "$HOME/.zsh.d/20-runtime.zsh" \
+  "$HOME/.zsh.d/30-auth.zsh" \
+  "$HOME/.zsh.d/40-completion.zsh" \
+  "$HOME/.zsh.d/50-history.zsh" \
+  "$HOME/.zsh.d/60-aliases.zsh" \
+  "$HOME/.zsh.d/70-options.zsh" \
+  "$HOME/.zsh.d/80-keybindings.zsh" \
+  "$HOME/.zsh.d/90-title.zsh" \
+  "$HOME/.zsh.d/99-prompt.zsh"
+do
+  [ -r "$config_file" ] && source "$config_file"
+done

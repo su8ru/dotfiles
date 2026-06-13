@@ -1,0 +1,13 @@
+# alias ================
+
+alias nyarn='yarn'
+alias gpp='g++-9 main.cpp -o ./a.out'
+alias py3='python3'
+alias :q
+alias grep='grep --color=auto'
+{{ if .isWSL2 -}}
+alias explorer='explorer.exe'
+alias clip='clip.exe'
+alias pwsh='pwsh.exe'
+alias wslcd='(){cd `wslpath $1`}'
+{{ end -}}

@@ -1,7 +1,11 @@
 {{- $isLinux := eq .chezmoi.os "linux" -}}
+{{- $profile := promptChoiceOnce . "profile" "Profile" (list "personal" "work") "personal" -}}
 
 {{- $osrelease := index .chezmoi.kernel "osrelease" | default "" -}}
 {{- $hasWSLString := hasSuffix "WSL2" $osrelease -}}
 
 [data]
-  isWSL2 = {{- and $isLinux $hasWSLString -}}
+  profile = {{ $profile | quote }}
+  isPersonal = {{ eq $profile "personal" }}
+  isWork = {{ eq $profile "work" }}
+  isWSL2 = {{ and $isLinux $hasWSLString }}
