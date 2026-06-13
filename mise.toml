@@ -1,0 +1,35 @@
+[tools]
+chezmoi = "latest"
+
+[tasks.diff]
+description = "Preview chezmoi changes"
+run = "chezmoi diff"
+
+[tasks.setup]
+description = "Apply dotfiles and install managed tools"
+run = """
+chezmoi apply -v
+mise install
+"""
+
+[tasks.update]
+description = "Update tools, dotfiles, and Vim plugins"
+run = """
+mise upgrade
+chezmoi update -v
+mise install
+"""
+
+[tasks."vim:install"]
+description = "Install Vim plugins"
+run = "vim +'PlugInstall --sync' +qa"
+
+[tasks."wsl2:mask-gpg-agent"]
+description = "Mask native gpg-agent units on WSL2"
+run = """
+systemctl --user mask gpg-agent.socket
+systemctl --user mask gpg-agent-ssh.socket
+systemctl --user mask gpg-agent-extra.socket
+systemctl --user mask gpg-agent-browser.socket
+systemctl --user mask gpg-agent.service
+"""

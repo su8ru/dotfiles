@@ -42,4 +42,7 @@ call plug#begin()
 Plug 'nordtheme/vim'
 call plug#end()
 
-colorscheme nord
+try
+  colorscheme nord
+catch /^Vim\%((\a\+)\)\=:E185:/
+endtry
