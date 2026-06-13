@@ -7,7 +7,9 @@ for config_file in \
   "$HOME/.zsh.d/00-env.zsh" \
   "$HOME/.zsh.d/10-path.zsh" \
   "$HOME/.zsh.d/20-runtime.zsh" \
-  "$HOME/.zsh.d/30-auth.zsh" \
+{{- if .isPersonal }}
+  "$HOME/.zsh.d/30-yubikey.zsh" \
+{{- end }}
   "$HOME/.zsh.d/40-completion.zsh" \
   "$HOME/.zsh.d/50-history.zsh" \
   "$HOME/.zsh.d/60-aliases.zsh" \

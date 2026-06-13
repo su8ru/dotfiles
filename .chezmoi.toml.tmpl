@@ -1,5 +1,9 @@
 {{- $isLinux := eq .chezmoi.os "linux" -}}
 {{- $profile := promptChoiceOnce . "profile" "Profile" (list "personal" "work") "personal" -}}
+{{- $gitName := promptStringOnce . "gitName" "Git user.name" "su8ru" -}}
+{{- $gitEmail := promptStringOnce . "gitEmail" "Git user.email" "main@su8ru.dev" -}}
+{{- $gitSigningKey := promptStringOnce . "gitSigningKey" "Git user.signingkey" "7573ED215A8DD685" -}}
+{{- $gitGpgSign := promptBoolOnce . "gitGpgSign" "Git commit.gpgsign" true -}}
 
 {{- $osrelease := index .chezmoi.kernel "osrelease" | default "" -}}
 {{- $hasWSLString := hasSuffix "WSL2" $osrelease -}}
@@ -9,3 +13,7 @@
   isPersonal = {{ eq $profile "personal" }}
   isWork = {{ eq $profile "work" }}
   isWSL2 = {{ and $isLinux $hasWSLString }}
+  gitName = {{ $gitName | quote }}
+  gitEmail = {{ $gitEmail | quote }}
+  gitSigningKey = {{ $gitSigningKey | quote }}
+  gitGpgSign = {{ $gitGpgSign }}

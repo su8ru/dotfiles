@@ -2,12 +2,15 @@
 chezmoi = "latest"
 delta = "latest"
 gh = "latest"
+{{ if .isPersonal -}}
 go = "latest"
+{{ end -}}
 node = "lts"
 "npm:@github/copilot" = "latest"
 "npm:@openai/codex" = "latest"
 "npm:pnpm" = "latest"
 pnpm = "latest"
 starship = "latest"
+{{ if .isPersonal -}}
 uv = "latest"
-
+{{ end -}}

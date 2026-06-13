@@ -1,10 +1,30 @@
+{{- $isWork := index . "isWork" | default false -}}
+{{- $gitName := index . "gitName" | default "su8ru" -}}
+{{- $gitEmail := index . "gitEmail" | default "" -}}
+{{- if and $isWork (not $gitEmail) -}}
+{{-   fail "gitEmail is required for work profile; run chezmoi init to update local config" -}}
+{{- end -}}
+{{- if not $gitEmail -}}
+{{-   $gitEmail = "main@su8ru.dev" -}}
+{{- end -}}
+{{- $gitSigningKey := index . "gitSigningKey" | default "" -}}
+{{- if and (not $isWork) (not $gitSigningKey) -}}
+{{-   $gitSigningKey = "7573ED215A8DD685" -}}
+{{- end -}}
+{{- $gitGpgSign := index . "gitGpgSign" | default (not $isWork) -}}
+{{- if $isWork -}}
+{{-   $gitSigningKey = "" -}}
+{{-   $gitGpgSign = false -}}
+{{- end -}}
 [user]
-  name = su8ru
-  email = main@su8ru.dev
-  signingkey = 7573ED215A8DD685
+  name = {{ $gitName }}
+  email = {{ $gitEmail }}
+{{- if $gitSigningKey }}
+  signingkey = {{ $gitSigningKey }}
+{{- end }}
 
 [commit]
-  gpgsign = true
+  gpgsign = {{ $gitGpgSign }}
 
 [core]
   autocrlf = input
