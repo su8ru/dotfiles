@@ -8,10 +8,6 @@ if type "brew" &> /dev/null; then
   source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
 
-if type "deno" > /dev/null 2>&1; then
-  export DENO_INSTALL="$HOME/.deno"
-fi
-
 if type "mise" > /dev/null 2>&1; then
   eval "$(mise activate zsh)"
   eval "$(mise activate --shims)"
